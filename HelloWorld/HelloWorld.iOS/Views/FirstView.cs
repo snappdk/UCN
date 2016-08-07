@@ -6,29 +6,34 @@ using UIKit;
 
 namespace HelloWorld.iOS.Views
 {
-    public partial class FirstView : MvxViewController
-    {
-        public FirstView() : base("FirstView", null)
-        {
-        }
+	public partial class FirstView : MvxViewController
+	{
+		public FirstView () : base ("FirstView", null)
+		{
+		}
 
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
+		public override void ViewDidLoad ()
+		{
+			base.ViewDidLoad ();
 
-            TableView.RowHeight = 150;
-
-            this.AutomaticallyAdjustsScrollViewInsets = true;
+			TableView.RowHeight = 150;
 
 
-            var source = new MvxSimpleTableViewSource(this.TableView, PhotoCell.Key );
-            TableView.Source = source;
-            this.AutomaticallyAdjustsScrollViewInsets = true;
+			this.AutomaticallyAdjustsScrollViewInsets = true;
 
-            var set = this.CreateBindingSet<FirstView, FirstViewModel>();
-            set.Bind(FetchButton).To(vm => vm.FetchCommand);
-            set.Bind(source).To(vm => vm.Photos);
-            set.Apply();
-        }
-    }
+
+			var source = new MvxSimpleTableViewSource (this.TableView, PhotoCell.Key);
+			source.DeselectAutomatically = true;
+
+			TableView.Source = source;
+			this.AutomaticallyAdjustsScrollViewInsets = true;
+
+
+			var set = this.CreateBindingSet<FirstView, FirstViewModel> ();
+			set.Bind (FetchButton).To (vm => vm.FetchCommand);
+			set.Bind (source).To (vm => vm.Photos);
+			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ItemSelectedCommand);
+			set.Apply ();
+		}
+	}
 }
