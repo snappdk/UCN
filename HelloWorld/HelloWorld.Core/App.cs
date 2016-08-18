@@ -1,4 +1,6 @@
+using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
+using HelloWorld.Core.Services;
 
 namespace HelloWorld.Core
 {
@@ -10,6 +12,8 @@ namespace HelloWorld.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
+
+            Mvx.RegisterSingleton<IFetchManager>(new FetchManager());
 
             RegisterAppStart<ViewModels.FirstViewModel>();
         }

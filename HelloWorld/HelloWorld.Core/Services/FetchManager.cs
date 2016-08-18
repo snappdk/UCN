@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 
 namespace HelloWorld.Core.Services
 {
-    public interface IPlaceholderService
+    public interface IFetchManager
     {
         Task<List<Photo>> GetPhotos();
+        Task<Photo> GetPhoto(int id);
     }
 
-    public class PlaceholderService : IPlaceholderService
+    public class FetchManager : IFetchManager
     {
+        List<Photo> _hackList;
+
         public async Task<List<Photo>> GetPhotos()
         {
             var webservice = new HttpClient();
@@ -24,7 +27,16 @@ namespace HelloWorld.Core.Services
 
             var list = JsonConvert.DeserializeObject<List<Photo>>(content);
 
+            _hackList = list;
+
             return list;
+        }
+
+        public Task<Photo> GetPhoto(int id)
+        {
+            var photo = _hackList.FirstOrDefault((arg) => arg.Id.Equals(id));
+
+            return Task.Run(() => photo);
         }
     }
 }

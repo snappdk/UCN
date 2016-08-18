@@ -3,6 +3,9 @@ using MvvmCross.Droid.Platform;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform.Platform;
 using MvvmCross.Platform.Plugins;
+using MvvmCross.Platform;
+using HelloWorld.Core.Services;
+using HelloWorld.Droid.Services;
 
 namespace HelloWorld.Droid
 {
@@ -26,6 +29,7 @@ namespace HelloWorld.Droid
         {
             registry.Register<MvvmCross.Plugins.DownloadCache.PluginLoader, MvvmCross.Plugins.DownloadCache.Droid.Plugin>();
             registry.Register<MvvmCross.Plugins.File.PluginLoader, MvvmCross.Plugins.File.Droid.Plugin>();
+
             base.AddPluginsLoaders(registry);
         }
 
@@ -34,7 +38,9 @@ namespace HelloWorld.Droid
             base.InitializeLastChance();
             MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
             MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
-        }
 
+            Mvx.RegisterSingleton<IAlertService>(Mvx.IocConstruct<AlertService>());
+            Mvx.RegisterSingleton<ILocalStorageService>(Mvx.IocConstruct<LocalStorageService>());
+        }
     }
 }

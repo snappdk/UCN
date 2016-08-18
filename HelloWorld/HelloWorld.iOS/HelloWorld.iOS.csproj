@@ -105,6 +105,14 @@
     <None Include="packages.config" />
     <InterfaceDefinition Include="Views\FirstView.xib" />
     <InterfaceDefinition Include="Views\PhotoCell.xib" />
+    <Compile Include="Services\AlertService.cs" />
+    <InterfaceDefinition Include="Views\DetailsView.xib" />
+    <Compile Include="Views\DetailsView.cs" />
+    <Compile Include="Views\DetailsView.designer.cs">
+      <DependentUpon>DetailsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Bootstrap\PictureChooserPluginBootstrap.cs" />
+    <Compile Include="Services\LocalStorageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
@@ -162,6 +170,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="MvvmCross.Plugins.PictureChooser">
+      <HintPath>..\packages\MvvmCross.Plugin.PictureChooser.4.2.2\lib\Xamarin.iOS10\MvvmCross.Plugins.PictureChooser.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.PictureChooser.iOS">
+      <HintPath>..\packages\MvvmCross.Plugin.PictureChooser.4.2.2\lib\Xamarin.iOS10\MvvmCross.Plugins.PictureChooser.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppDelegate.cs.txt" />
@@ -173,6 +187,9 @@
       <Project>{95d3c301-86ab-43d5-9421-84d9912c1d34}</Project>
       <Name>HelloWorld.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

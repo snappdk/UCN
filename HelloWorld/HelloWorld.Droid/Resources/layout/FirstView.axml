@@ -5,15 +5,27 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <Button
-        android:text="Fetch content"
+        android:text="Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button1"
         local:MvxBind="Click FetchCommand" />
-    <Mvx.MvxListView
-        android:background="@android:color/holo_orange_light"
-        android:layout_height="match_parent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        local:MvxBind="ItemsSource Photos; ItemClick ItemSelectedCommand"
-        local:MvxItemTemplate="@layout/item_photo" />
+        android:layout_height="match_parent">
+        <Mvx.MvxListView
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            local:MvxBind="ItemsSource Photos;ItemClick ItemSelectedCommand"
+            local:MvxItemTemplate="@layout/item_photo" />
+        <Button
+            android:text="+"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            local:MvxBind="Click AddCommand" />
+    </RelativeLayout>
 </LinearLayout>

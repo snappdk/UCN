@@ -4,21 +4,25 @@ using MvvmCross.Core.ViewModels;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using MvvmCross.Platform;
+using MvvmCross.Plugins.PictureChooser;
+using System;
 
 namespace HelloWorld.Core.ViewModels
 {
-    public class FirstViewModel 
+    public class FirstViewModel
         : MvxViewModel
     {
-        private IPlaceholderService _placeholderService;
-        public override async void Start()
-        {
-            base.Start();
-        }
+        private IFetchManager _placeholderService;
+        private IAlertService _alertService;
+        private ILocalStorageService _localStorageService;
 
-        public FirstViewModel(IPlaceholderService placeholderService)
+        public FirstViewModel(IFetchManager fetchManager, IAlertService alertService, ILocalStorageService localStorageService)
         {
-            _placeholderService = placeholderService;
+            _placeholderService = fetchManager;
+            _alertService = alertService;
+            _localStorageService = localStorageService;
         }
 
         private MvxAsyncCommand _fetchCommand;
@@ -34,14 +38,9 @@ namespace HelloWorld.Core.ViewModels
 
         private async Task DoFetchCommand()
         {
-            System.Diagnostics.Debug.WriteLine("Hello from core");
-            Content = "Fetching data..";
-
             var result = await _placeholderService.GetPhotos();
-            
-            Photos = new ObservableCollection<Photo>(result);
 
-            Content = result.FirstOrDefault().Title;
+            Photos = new ObservableCollection<Photo>(result);
         }
 
         private ObservableCollection<Photo> _photos;
@@ -51,16 +50,7 @@ namespace HelloWorld.Core.ViewModels
             set { if (_photos == value) return; _photos = value; RaisePropertyChanged(() => Photos); }
         }
 
-
-        private string _content;
-        public string Content
-        {
-            get { return _content; }
-            set { if (_content == value) return; _content = value; RaisePropertyChanged(() => Content); }
-        }
-
         private MvxCommand<Photo> _itemSelectedCommand;
-
         public MvxCommand<Photo> ItemSelectedCommand
         {
             get
@@ -69,12 +59,41 @@ namespace HelloWorld.Core.ViewModels
                 return _itemSelectedCommand;
             }
         }
-
         private void DoItemSelectedCommand(Photo photo)
         {
-            System.Diagnostics.Debug.WriteLine(photo.Title);
+            var bundle = new MvxBundle();
+            bundle.Data.Add("Id", photo.Id.ToString());
+
+            ShowViewModel<DetailsViewModel>(bundle);
         }
 
+        private MvxAsyncCommand _addCommand;
+        public MvxAsyncCommand AddCommand
+        {
+            get
+            {
+                _addCommand = _addCommand ?? new MvxAsyncCommand(DoAddCommand);
+                return _addCommand;
+            }
+        }
+        private async Task DoAddCommand()
+        {
+            var pictureChooserTask = Mvx.Resolve<IMvxPictureChooserTask>();
 
+            var result = await pictureChooserTask.ChoosePictureFromLibraryAsync(1024, 80);
+
+            if (result != null)
+            {
+                var path = await _localStorageService.SaveAsync(Guid.NewGuid().ToString(), result);
+
+                if (Photos == null)
+                {
+                    Photos = new ObservableCollection<Photo>();
+                }
+
+                Photos.Add(new Photo() { Title = path, ThumbnailUrl = path });
+            }
+
+        }
     }
 }
